@@ -42,3 +42,8 @@ class TransactionSerializer(serializers.ModelSerializer):
             'id', 'user', 'user_id', 'waste_type', 'waste_type_id', 
             'container', 'container_id', 'date', 'points_awarded'
         ]
+
+class UserBonusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'total_points']

@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import WasteContainer, WasteType, Transaction
 from .serializers import (
-    WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer
+    WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer, UserBonusSerializer
 )
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+# Importa el modelo de usuario personalizado
+from .models import User
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -47,3 +48,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Consultar las bonificaciones acumuladas de un usuario
+class UserBonusView(APIView):
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+
+    def get(self, request, id):
+        user = User.objects.get(id=id)
+        serializer = UserBonusSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
