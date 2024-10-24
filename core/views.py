@@ -5,6 +5,18 @@ from .models import WasteContainer, WasteType, Transaction
 from .serializers import (
     WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer
 )
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+
+#Vista para registrar nuevos usuarios:
+class RegisterUserView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ViewSet para los contenedores de basura
 class WasteContainerViewSet(viewsets.ReadOnlyModelViewSet):
