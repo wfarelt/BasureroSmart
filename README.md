@@ -1,0 +1,2 @@
+# BasureroSmart
+Basurero inteligente
