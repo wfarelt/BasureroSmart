@@ -8,6 +8,7 @@ from .serializers import (
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated
 
 #Vista para registrar nuevos usuarios:
 class RegisterUserView(APIView):
@@ -22,6 +23,8 @@ class RegisterUserView(APIView):
 class WasteContainerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = WasteContainer.objects.all()
     serializer_class = WasteContainerSerializer
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+
 
 # ViewSet para los tipos de residuos
 class WasteTypeViewSet(viewsets.ReadOnlyModelViewSet):
