@@ -1,0 +1,36 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<table class="table">
+  <tr>
+    <th>Reward</th>
+    <th>Points Required</th>
+    <th>Stock</th>
+    <th>Status</th>
+    <th>Options</th>
+  </tr>
+  {% for reward in rewards %}
+  <tr>
+    <td>{{ reward.name }}</td>
+    <td>{{ reward.points_required }}</td>
+    <td>{{ reward.stock }}</td>
+    <td>{{ reward.status }}</td>
+    <td>
+      <a href="{% url 'update_reward' reward.id %}" class="btn btn-primary btn-sm">Edit</a>
+      
+      {% if reward.status %}
+      <a href="{% url 'disable_reward' reward.id %}" class="btn btn-danger btn-sm">Disable</a>  
+      {% else %}
+      <a href="{% url 'enable_reward' reward.id %}" class="btn btn-success btn-sm">Enable</a>
+      {% endif %}
+
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br />
+<a href="{% url 'create_reward' %}" class="btn btn-dark">Create Reward</a>
+{% endblock %}

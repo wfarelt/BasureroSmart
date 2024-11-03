@@ -1,0 +1,44 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<table class="table">
+  <tr>
+    <th>Container</th>
+    <th>Location</th>
+    <th>Last Maintenance</th>
+    <th>Capacity</th>
+    <th>Current Level</th>
+    <th>Status</th>
+    
+    <th>Options</th>
+  </tr>
+  {% for container in containers %}
+  <tr>
+    <td>{{ container.name }}</td>
+    <td>{{ container.location }}</td>
+    <td>{{ container.last_maintenance|date:"Y-m-d" }}</td>
+    <td>{{ container.capacity }}</td>
+    <td>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" 
+            style="width: {{container.current_level}}%;"
+            aria-valuenow="{{container.current_level}}" 
+            aria-valuemin="0" 
+            aria-valuemax="100"> {{container.current_level}}%
+          </div>
+        </div>
+    </td>
+    <td>{{ container.status }}</td>
+    <td>
+        <a href="{% url 'update_container' container.id %}" class="btn btn-primary btn-sm">Edit</a>
+        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+    <td>
+  </tr>
+  {% endfor %}
+</table>
+<br />
+<a href="{% url 'create_container' %}" class="btn btn-dark">Create Container</a> 
+
+{% endblock %}

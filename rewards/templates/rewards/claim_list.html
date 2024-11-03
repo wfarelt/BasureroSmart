@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<table class="table">
+  <tr>
+    <th>Reward</th>
+    <th>Points Required</th>
+    <th>User</th>
+    <th>Code_Used</th>
+    <th>Status</th>
+    <th>Options</th>
+  </tr>
+  {% for claim in claims %}
+  <tr>
+    <td>{{ claim.reward.name }}</td>
+    <td>{{ claim.reward.points_required }}</td>
+    <td>{{ claim.user.username }}</td>
+    <td>{{ claim.code }}</td>
+    <td>{{ claim.status }}</td>
+    <td>
+      {% if claim.status == 'Pendiente' %}
+      <a href="{% url 'execute_claim' claim.id %}" class="btn btn-success">Ejecutar</a>
+      <a href="{% url 'cancel_claim' claim.id %}" class="btn btn-danger">Anular</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br />
+<a href="#" class="btn btn-dark">Create Claim</a>
+{% endblock %}

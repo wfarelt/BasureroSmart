@@ -13,9 +13,19 @@ class User(AbstractUser):
 class WasteContainer(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nombre del Contenedor")
     location = models.CharField(max_length=255, verbose_name="Ubicación del Contenedor")
-
+    #Estado del contenedor choises = [Opertivo, lleno, en mantenimiento]
+    status = models.CharField(max_length=20, 
+                              choices=[('Operativo', 'Operativo'), 
+                                       ('Lleno', 'Lleno'), 
+                                       ('Mantenimiento','Mantenimiento')], 
+                              default='Operativo')
+    last_maintenance = models.DateTimeField(auto_now_add=True, verbose_name="Último Mantenimiento")
+    capacity = models.PositiveIntegerField(verbose_name="Capacidad del Contenedor", default=100)
+    # Nivel actual de residuos en el contenedor en porcentaje
+    current_level = models.PositiveIntegerField(verbose_name="Nivel Actual de Residuos", default=0)
+    
     def __str__(self):
-        return f"{self.name} - {self.location}"
+        return f"{self.name} - {self.location} - {self.status}"
 
 # Modelo para representar los tipos de residuos
 class WasteType(models.Model):
@@ -45,4 +55,7 @@ class Transaction(models.Model):
         if not self.pk:
             self.user.total_points += self.points_awarded
             self.user.save()
+            self.container.current_level += 1
+            self.container.save()
         super().save(*args, **kwargs)
+        
