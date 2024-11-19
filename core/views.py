@@ -1,6 +1,6 @@
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from .models import WasteContainer, WasteType, Transaction
@@ -11,10 +11,13 @@ from rest_framework.views import APIView
 # Importa el modelo de usuario personalizado
 from .models import User
 from .serializers import UserSerializer
-from rest_framework.permissions import IsAuthenticated
+
 
 #Vista para registrar nuevos usuarios:
 class RegisterUserView(APIView):
+    permission_classes = []
+    parser_classes = (MultiPartParser, FormParser)  # Permitir subir archivos
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():

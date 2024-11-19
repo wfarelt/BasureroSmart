@@ -6,6 +6,7 @@ from django.db import models
 
 class User(AbstractUser):
     total_points = models.PositiveIntegerField(default=0, verbose_name="Total de Puntos")
+    image_perfil = models.ImageField(upload_to='profile_images/', null=True, blank=True, verbose_name="Imagen de Perfil")
    
     def __str__(self):
         return f"{self.username} - Puntos: {self.total_points}"

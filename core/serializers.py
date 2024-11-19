@@ -5,7 +5,22 @@ from .models import User, WasteContainer, WasteType, Transaction
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'total_points']
+        fields = ['username', 'email', 'password', 'image_perfil']  # Incluye los campos que necesitas
+        extra_kwargs = {
+            'password': {'write_only': True},  # Asegura que el password no se devuelva en la respuesta
+            'total_points': {'read_only': True}  # Asegura que los puntos no se devuelvan en la respuesta
+        }
+
+    def create(self, validated_data):
+        # Crea un usuario utilizando el método `create_user`
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email'),
+            password=validated_data['password'],
+            image_perfil=validated_data.get('image_perfil')
+        )
+        return user
+
 
 # Serializer para el modelo WasteContainer
 class WasteContainerSerializer(serializers.ModelSerializer):

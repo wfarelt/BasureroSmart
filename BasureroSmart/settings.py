@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +26,15 @@ TF_OPTS = config('TF_ENABLE_ONEDNN_OPTS', default=1)
 SECRET_KEY = 'django-insecure-b29v5q0$(z4x@dw5n($x($&ws62-16*9lt1tjs%yj=21v1o92g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+# Detectar el entorno actual
+DJANGO_ENV = config('DJANGO_ENV', default='local')
+if DJANGO_ENV == 'local':
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -81,13 +87,28 @@ WSGI_APPLICATION = 'BasureroSmart.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DJANGO_ENV == 'local':
+    # Configuración de la base de datos para el entorno local
+    DATABASES = {
+        'default': {
+            'ENGINE': config('LOCAL_DATABASE_ENGINE'),
+            'NAME': BASE_DIR / config('LOCAL_DATABASE_NAME'),
+        }
     }
-}
-
+    ALLOWED_HOSTS = ['*']
+else:
+    # Configuración de la base de datos para el entorno de producción
+    DATABASES = {
+        'default': {
+            'ENGINE': config('PROD_DATABASE_ENGINE'),
+            'NAME': config('PROD_DATABASE_NAME'),
+            'USER': config('PROD_DATABASE_USER'),
+            'PASSWORD': config('PROD_DATABASE_PASSWORD'),
+            'HOST': config('PROD_DATABASE_HOST'),
+            'PORT': config('PROD_DATABASE_PORT'),
+        }
+    }
+    ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -138,9 +159,9 @@ AUTH_USER_MODEL = 'core.User'
 
 # Configurar la autenticación usando SimpleJWT
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    #'DEFAULT_AUTHENTICATION_CLASSES': (
+    #    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    #),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
