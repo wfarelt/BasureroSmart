@@ -1,6 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+
 from .models import WasteContainer, WasteType, Transaction
 from .serializers import (
     WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer, UserBonusSerializer
@@ -36,6 +38,12 @@ class WasteTypeViewSet(viewsets.ReadOnlyModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+    
+    # Filtra las transacciones por el usuario autenticado    
+    def get_queryset(self):
+        user = self.request.user
+        return Transaction.objects.filter(user=user)  # Filtra por el usuario autenticado
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
