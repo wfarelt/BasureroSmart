@@ -40,14 +40,16 @@ class RewardClaimForm(forms.ModelForm):
 class WasteContainerForm(forms.ModelForm):
     class Meta:
         model = WasteContainer
-        fields = ['name', 'location', 'status']
+        fields = ['name', 'location', 'capacity', 'status']
         labels = {
             'name': 'Nombre',
             'location': 'Ubicación',
+            'capacity': 'Capacidad',
             'status': 'Estado'
         }        
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'})
         }

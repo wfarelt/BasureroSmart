@@ -6,6 +6,7 @@
 <table class="table">
   <tr>
     <th>Reward</th>
+    <th>Description</th>
     <th>Points Required</th>
     <th>Stock</th>
     <th>Status</th>
@@ -14,6 +15,7 @@
   {% for reward in rewards %}
   <tr>
     <td>{{ reward.name }}</td>
+    <td>{{ reward.description }}</td>
     <td>{{ reward.points_required }}</td>
     <td>{{ reward.stock }}</td>
     <td>{{ reward.status }}</td>

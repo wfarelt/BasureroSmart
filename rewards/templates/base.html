@@ -3,57 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
     <title>Recompensas</title>
 </head>
 <body>
     <div class="container">
+        
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="#">RECOMPENSAS</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+              <a class="navbar-brand" href="#">RECOMPENSAS</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                  <ul class="navbar-nav">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'list_container' %}">Contenedores</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'list_reward' %}">Recompensas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'list_claim' %}">Canje de recompensas</a>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <!-- Enlaces principales a la izquierda -->
+                  <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                          <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
                       </li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Perfil
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="{% url 'list_container' %}">Contenedores</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="{% url 'list_reward' %}">Recompensas</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="{% url 'list_claim' %}">Canje de recompensas</a>
+                      </li>
                   </ul>
-                </div>
-            </nav>
+      
+                  <!-- Sección de usuario a la derecha -->
+                  <ul class="navbar-nav ml-auto">
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              {% if user.is_authenticated %}
+                                  {{ user.username }}
+                              {% else %}
+                                  Perfil
+                              {% endif %}
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                              {% if user.is_authenticated %}
+                                  <a class="dropdown-item" href="">Cerrar sesión</a>
+                              {% else %}
+                                  <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+                              {% endif %}
+                          </div>
+                      </li>
+                  </ul>
+              </div>
+          </nav>
         </header>
         <br>
+
         <main>
             {% block content %}
             {% endblock %}
         </main>
         <br>
+
         <footer class="text-center mt-5">
             <p>&copy; 2024 - Grupo11</p>
         </footer>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
