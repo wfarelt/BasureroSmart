@@ -6,12 +6,13 @@ from .models import Reward, RewardClaim
 class RewardForm(forms.ModelForm):
     class Meta:
         model = Reward
-        fields = ['name', 'description', 'points_required', 'stock', 'status']
+        fields = ['name', 'description', 'points_required', 'stock', 'image', 'status']
         labels = {
             'name': 'Nombre',
             'description': 'Descripción',
             'points_required': 'Puntos requeridos',
             'stock': 'Stock',
+            'image': 'Imagen',
             'status': 'Estado'
         }
         widgets = {
@@ -19,6 +20,7 @@ class RewardForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'points_required': forms.NumberInput(attrs={'class': 'form-control'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control'}),
+            
             'status': forms.CheckboxInput(attrs={'class': 'form-check-input'})
         }
         

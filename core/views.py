@@ -5,12 +5,14 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import WasteContainer, WasteType, Transaction
 from .serializers import (
-    WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer, UserBonusSerializer
+    WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer, UserBonusSerializer,\
+    RewardSerializer
 )
 from rest_framework.views import APIView
 # Importa el modelo de usuario personalizado
 from .models import User
 from .serializers import UserSerializer
+from rewards.models import Reward
 
 
 #Vista para registrar nuevos usuarios:
@@ -68,3 +70,14 @@ class UserBonusView(APIView):
         user = User.objects.get(id=id)
         serializer = UserBonusSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+#Consultar los premios disponibles (Rewards)
+class RewardViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Reward.objects.all()
+    serializer_class = RewardSerializer
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+    
+    # Filtra los rewards con status=true
+    def get_queryset(self):
+        return Reward.objects.filter(status=True)  # Filtra por el status activo
+

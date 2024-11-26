@@ -8,6 +8,9 @@ pip install python-decouple
 # Configuración para el entorno local
 DJANGO_ENV=local
 
+
+python manage.py collectstatic
+
 # Configuración para la base de datos local
 
     LOCAL_DATABASE_ENGINE=django.db.backends.sqlite3

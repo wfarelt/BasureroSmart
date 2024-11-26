@@ -9,6 +9,7 @@
     <th>Description</th>
     <th>Points Required</th>
     <th>Stock</th>
+    <th>Image</th>
     <th>Status</th>
     <th>Options</th>
   </tr>
@@ -18,6 +19,7 @@
     <td>{{ reward.description }}</td>
     <td>{{ reward.points_required }}</td>
     <td>{{ reward.stock }}</td>
+    <td><img src="{{ reward.image.url }}" width="50" height="50" /></td>
     <td>{{ reward.status }}</td>
     <td>
       <a href="{% url 'update_reward' reward.id %}" class="btn btn-primary btn-sm">Edit</a>

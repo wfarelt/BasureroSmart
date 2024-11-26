@@ -9,6 +9,7 @@ class Reward(models.Model):
     description = models.TextField()
     points_required = models.PositiveIntegerField()
     stock = models.PositiveIntegerField(default=1, blank=True)
+    image = models.ImageField(upload_to='rewards/', blank=True, null=True)
     status = models.BooleanField(default=True)
 
     def __str__(self):

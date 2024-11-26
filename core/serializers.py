@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User, WasteContainer, WasteType, Transaction
+from rewards.models import Reward
 
 # Serializer para el modelo User
 class UserSerializer(serializers.ModelSerializer):
@@ -62,3 +63,10 @@ class UserBonusSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'total_points']
+    
+    
+class RewardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reward
+        fields = ['id', 'name' , 'description', 'points_required', 'stock', 'image', 'status']
+    
