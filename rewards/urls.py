@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home' ),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     # Rewards
     path('rewards/create/', views.RewardCreateView.as_view(), name='create_reward' ),
     path('rewards/list', views.RewardListView.as_view(), name='list_reward' ),
@@ -17,4 +19,6 @@ urlpatterns = [
     path('rewards/containers/list', views.WasteContainerListView.as_view(), name='list_container' ),
     path('rewards/containers/create', views.WasteContainerCreateView.as_view(), name='create_container' ),
     path('rewards/containers/update/<int:pk>', views.WasteContainerUpdateView.as_view(), name='update_container' ),
+    # Users
+    path('users/list', views.UserListView.as_view(), name='list_user' ),
 ]

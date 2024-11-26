@@ -11,49 +11,51 @@
     <div class="container">
         
         <header>
-          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-              <a class="navbar-brand" href="#">RECOMPENSAS</a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                  <!-- Enlaces principales a la izquierda -->
-                  <ul class="navbar-nav mr-auto">
-                      <li class="nav-item active">
-                          <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link" href="{% url 'list_container' %}">Contenedores</a>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link" href="{% url 'list_reward' %}">Recompensas</a>
-                      </li>
-                      <li class="nav-item">
-                          <a class="nav-link" href="{% url 'list_claim' %}">Canje de recompensas</a>
-                      </li>
-                  </ul>
-      
-                  <!-- Sección de usuario a la derecha -->
-                  <ul class="navbar-nav ml-auto">
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              {% if user.is_authenticated %}
-                                  {{ user.username }}
-                              {% else %}
-                                  Perfil
-                              {% endif %}
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                              {% if user.is_authenticated %}
-                                  <a class="dropdown-item" href="">Cerrar sesión</a>
-                              {% else %}
-                                  <a class="dropdown-item" href="#">Iniciar sesión</a>
-                              {% endif %}
-                          </div>
-                      </li>
-                  </ul>
-              </div>
-          </nav>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" style="color: green;" href="#">RECOMPENSAS</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <!-- Enlaces principales a la izquierda -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/rewards/containers/list' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'list_container' %}">Contenedores</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/rewards/list' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'list_reward' %}">Recompensas</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/rewards/claim/list' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'list_claim' %}">Canje de recompensas</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/users/list' %}active{% endif %}">
+                            <a class="nav-link" href="{% url 'list_user' %}">Registros</a>
+                        </li>
+                    </ul>
+            
+                    <!-- Sección de usuario a la derecha -->
+                    <ul class="navbar-nav ml-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ user.username }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            
         </header>
         <br>
 

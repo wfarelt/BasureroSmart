@@ -1,0 +1,31 @@
+<!-- rewards/templates/rewards/login.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="col-md-4 offset-md-4 mt-4">
+        <div class="card text-center">
+            <div class="card-header">
+                <h2>Iniciar Sesión</h2>
+            </div>
+  
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="card-body">
+                    {{ form.as_p }}  <!-- Muestra los campos del formulario -->
+                    <button type="submit" class="btn btn-dark">Iniciar sesión</button>
+                </div>
+                    
+            </form>
+        </div>
+    </div>
+
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

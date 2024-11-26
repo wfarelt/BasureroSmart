@@ -8,8 +8,13 @@ pip install python-decouple
 # Configuración para el entorno local
 DJANGO_ENV=local
 
-
+rm -rf /ruta/a/tu/proyecto/staticfiles/
 python manage.py collectstatic
+
+
+sudo -u postgres psql
+DROP DATABASE basurero_prod;
+CREATE DATABASE basurero_prod;
 
 # Configuración para la base de datos local
 
@@ -40,7 +45,7 @@ ALTER ROLE wfarel SET timezone TO 'UTC';
 GRANT ALL PRIVILEGES ON DATABASE basurero_prod TO wfarel;
 GRANT ALL PRIVILEGES ON SCHEMA public TO wfarel;
 ALTER SCHEMA public OWNER TO wfarel;
-ALTER DATABASE nombasurero_prod OWNER TO wfarel;
+ALTER DATABASE basurero_prod OWNER TO wfarel;
 
 
 \q
@@ -53,19 +58,32 @@ sudo nano /etc/nginx/sites-available/BasureroSmart
 
 server {
     listen 80;
-    server_name 192.168.50.153;
+    server_name 192.168.10.153;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
-    location /staticfiles/ {
-        root /home/wfarel/BasureroSmart;
+    # Archivos estáticos
+    location /static/ {
+        alias /home/wfarel/BasureroSmart/staticfiles/;
     }
 
+    # Archivos de medios
+    location /media/ {
+        alias /home/wfarel/BasureroSmart/media/;
+    }
+
+    # Pasar las solicitudes a Gunicorn
     location / {
         include proxy_params;
         proxy_pass http://unix:/run/gunicorn.sock;
     }
 }
+
+
+sudo chown -R www-data:www-data /home/wfarel/BasureroSmart/staticfiles/
+sudo chown -R www-data:www-data /home/wfarel/BasureroSmart/media/
+
+sudo systemctl restart nginx
 
 sudo ln -s /etc/nginx/sites-available/BasureroSmart /etc/nginx/sites-enabled
 sudo nginx -t

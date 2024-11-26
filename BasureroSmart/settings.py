@@ -180,3 +180,6 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
+
+# settings.py
+LOGIN_URL = '/login/'
