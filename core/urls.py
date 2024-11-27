@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from .views import WasteContainerViewSet, WasteTypeViewSet, TransactionViewSet, UserBonusView,\
-    RewardViewSet
+    RewardViewSet, RewardClaimViewSet
 from django.urls import path
 from .views import RegisterUserView
 from rest_framework_simplejwt.views import (
@@ -13,6 +13,7 @@ router.register(r'containers', WasteContainerViewSet, basename='container')
 router.register(r'waste-types', WasteTypeViewSet, basename='waste-type')
 router.register(r'transactions', TransactionViewSet, basename='transaction')
 router.register(r'rewards', RewardViewSet, basename='reward')
+router.register(r'reward-claims', RewardClaimViewSet, basename='reward-claim')
 
 
 urlpatterns = router.urls

@@ -6,13 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from .models import WasteContainer, WasteType, Transaction
 from .serializers import (
     WasteContainerSerializer, WasteTypeSerializer, TransactionSerializer, UserBonusSerializer,\
-    RewardSerializer
+    RewardSerializer, RewardClaimSerializer
 )
 from rest_framework.views import APIView
 # Importa el modelo de usuario personalizado
 from .models import User
 from .serializers import UserSerializer
-from rewards.models import Reward
+from rewards.models import Reward, RewardClaim
 
 
 #Vista para registrar nuevos usuarios:
@@ -81,3 +81,32 @@ class RewardViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return Reward.objects.filter(status=True)  # Filtra por el status activo
 
+
+# ViewSet para las solicitudes de premios
+class RewardClaimViewSet(viewsets.ModelViewSet):
+    queryset = Reward.objects.all()
+    serializer_class = RewardClaimSerializer
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+    
+    # Filtra las solicitudes por el usuario autenticado
+    def get_queryset(self):
+        user = self.request.user
+        return RewardClaim.objects.filter(user=user)  
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            reward = serializer.validated_data['reward']
+            user = request.user
+            if user.total_points >= reward.points_required and reward.stock > 0:
+                # Crear la solicitud
+                reward.stock -= 1  # Disminuye el stock
+                reward.save()
+                reward_claim = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(
+                    {'error': 'No tienes suficientes puntos o el premio está agotado'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

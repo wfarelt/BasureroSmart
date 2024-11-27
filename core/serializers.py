@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User, WasteContainer, WasteType, Transaction
-from rewards.models import Reward
+from rewards.models import Reward, RewardClaim
 
 # Serializer para el modelo User
 class UserSerializer(serializers.ModelSerializer):
@@ -69,4 +69,25 @@ class RewardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reward
         fields = ['id', 'name' , 'description', 'points_required', 'stock', 'image', 'status']
+
+class RewardClaimSerializer(serializers.ModelSerializer):
+    user = UserBonusSerializer(read_only=True)
+    reward = RewardSerializer(read_only=True)
     
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user', write_only=True
+    )
+    reward_id = serializers.PrimaryKeyRelatedField(
+        queryset=Reward.objects.all(), source='reward', write_only=True
+    )
+    
+    class Meta:
+        model = RewardClaim
+        fields = ['user', 'user_id', 'reward', 'reward_id', 'claim_date', 'code', 'status']
+        
+    def create(self, validated_data):
+        reward_claim = RewardClaim.objects.create(
+            user=validated_data['user'],
+            reward=validated_data['reward']
+        )
+        return reward_claim

@@ -27,6 +27,8 @@ class RewardClaim(models.Model):
         return f"{self.reward.name} - {self.status}"
     
     def save(self, *args, **kwargs):
+        code = get_random_string(12)
+        self.code = code
         if self.status == 'Pendiente':
             self.user.total_points -= self.reward.points_required
             self.user.save()
