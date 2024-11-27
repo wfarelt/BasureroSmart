@@ -6,7 +6,7 @@ from rewards.models import Reward, RewardClaim
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'image_perfil']  # Incluye los campos que necesitas
+        fields = ['username', 'email', 'password', 'image_perfil', 'total_points']  # Incluye los campos que necesitas
         extra_kwargs = {
             'password': {'write_only': True},  # Asegura que el password no se devuelva en la respuesta
             'total_points': {'read_only': True}  # Asegura que los puntos no se devuelvan en la respuesta
