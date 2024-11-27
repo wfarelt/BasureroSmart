@@ -14,11 +14,27 @@ from .models import User
 from .serializers import UserSerializer
 from rewards.models import Reward, RewardClaim
 
+# Vista de perfil de usuario
+class UserView(APIView):
+    permission_classes = [IsAuthenticated]  # Requiere autenticación
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        user = request.user
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 #Vista para registrar nuevos usuarios:
 class RegisterUserView(APIView):
-    permission_classes = []
     parser_classes = (MultiPartParser, FormParser)  # Permitir subir archivos
+    permission_classes = []  # No Requiere autenticación
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
