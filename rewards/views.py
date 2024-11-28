@@ -14,6 +14,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 
+from ml_utils import train_face_recognition as tfr
+
 # Create your views here.
 
 def home(request):
@@ -151,4 +153,6 @@ class UserListView(LoginRequiredMixin, ListView):
         context['claims'] = RewardClaim.objects.filter(user=self.request.user).count()
         return context
     
-    
+def train_model_view(request):
+    tfr.entrenamiento()
+    return redirect('home')

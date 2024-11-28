@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from .views import recognize_face_view
 
 router = DefaultRouter()
 router.register(r'containers', WasteContainerViewSet, basename='container')
@@ -24,4 +25,5 @@ urlpatterns += [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh token
     path('user-bonuses/<int:id>/', UserBonusView.as_view(), name='user_bonus'),  # Ver bonificación
+    path('recognize_face/', recognize_face_view, name='recognize_face'),
 ]

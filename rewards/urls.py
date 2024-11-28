@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import train_model_view
 
 urlpatterns = [
     path('', views.home, name='home' ),
@@ -21,4 +22,6 @@ urlpatterns = [
     path('rewards/containers/update/<int:pk>', views.WasteContainerUpdateView.as_view(), name='update_container' ),
     # Users
     path('users/list', views.UserListView.as_view(), name='list_user' ),
+    # Entrenamiento  train_model_view(
+    path('train-model/', views.train_model_view, name='train_model' ),
 ]

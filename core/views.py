@@ -14,6 +14,13 @@ from .models import User
 from .serializers import UserSerializer
 from rewards.models import Reward, RewardClaim
 
+# Reconocimiento facial
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from ml_utils.face_recognition import recognize_face
+import cv2
+import numpy as np
+
 # Vista de perfil de usuario
 class UserView(APIView):
     permission_classes = [IsAuthenticated]  # Requiere autenticación
@@ -126,3 +133,30 @@ class RewardClaimViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+def recognize_face_view(request):
+    if request.method == 'POST':
+        if 'face_image' not in request.FILES:
+            return JsonResponse({'error': 'No face_image part in the request'}, status=400)
+
+        file = request.FILES['face_image']
+        if not file.name:
+            return JsonResponse({'error': 'No selected file'}, status=400)
+
+        # Leer la imagen en formato de bytes
+        file_bytes = np.frombuffer(file.read(), np.uint8)
+        # Convertir los bytes a una imagen
+        face_image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+
+        # Llamar a la función recognize_face
+        user_id, confidence = recognize_face(face_image)
+
+        # Convertir los valores a tipos de datos nativos de Python
+        user_id = int(user_id)
+        confidence = float(confidence)
+
+        return JsonResponse({'user_id': user_id, 'confidence': confidence})
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

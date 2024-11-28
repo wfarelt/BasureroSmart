@@ -2,14 +2,68 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+import cv2
+import os
+
+def recortar_foto(path_image, id_user):
+    # Cargar el clasificador de cara de OpenCV
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+    # Leer la imagen
+    img = cv2.imread(path_image)
+
+    # Verificar si la imagen fue cargada correctamente
+    if img is None:
+        print(f"Error: No se pudo cargar la imagen en {path_image}.")
+        return
+
+    # Convertir la imagen a escala de grises
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Detectar caras en la imagen
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+    # Si se detecta al menos una cara
+    if len(faces) > 0:
+        for (x, y, w, h) in faces:
+            # Recortar la cara de la imagen
+            face_img = img[y:y+h, x:x+w]
+
+            # Guardar la imagen de la cara recortada
+            cv2.imwrite(path_image, face_img)
+            print(f"Foto registrada exitosamente: {path_image}")
+            break  # Solo guardamos la primera cara detectada
+    else:
+        print("No se detectó ninguna cara en la imagen.")
+
+
 # Modelo extendido de usuario para añadir la bonificación total
+def user_directory_path(instance, filename):
+    # Consultar si no tiene id, es porque es un nuevo usuario
+    if not instance.id:
+        last_id = User.objects.last().id + 1
+    else:
+        last_id = instance.id
+    
+    return f'datasets/faces/{last_id}/{filename}'
 
 class User(AbstractUser):
     total_points = models.PositiveIntegerField(default=0, verbose_name="Total de Puntos")
-    image_perfil = models.ImageField(upload_to='profile_images/', null=True, blank=True, verbose_name="Imagen de Perfil")
+    image_perfil = models.ImageField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Imagen de Perfil")
    
     def __str__(self):
         return f"{self.username} - Puntos: {self.total_points}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Si se ha subido una imagen de perfil, recortar
+        if self.image_perfil:
+            try:
+                print("Recortando imagen...", self.image_perfil.name)
+                path_image = "media/" + self.image_perfil.name
+                recortar_foto(path_image, self.id)
+            except Exception as e:
+                print("Error al recortar la imagen:", e)
 
 # Modelo para representar los contenedores de basura
 class WasteContainer(models.Model):

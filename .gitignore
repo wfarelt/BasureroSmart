@@ -161,5 +161,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-face_recognition/
-ai_models/
+# Ignorar archivos de configuración específicos de editor
+*.swp
+.idea/
+.vscode/
+
+
+# Ignorar migraciones dentro de cualquier aplicación
+*/migrations/
+
+/ml_utils/models/
+/media/
