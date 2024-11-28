@@ -169,6 +169,7 @@ cython_debug/
 
 # Ignorar migraciones dentro de cualquier aplicación
 */migrations/
+!*/migrations/__init__.py
 
 /ml_utils/models/
 /media/
