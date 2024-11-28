@@ -9,6 +9,4 @@ requests==2.32.3
 tensorflow==2.18.0
 keras==3.6.0
 torch==2.5.1
-# Arduino
-pyserial==3.5
-torchvision==0.20.1
+

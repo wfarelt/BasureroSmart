@@ -50,20 +50,26 @@ def user_directory_path(instance, filename):
 class User(AbstractUser):
     total_points = models.PositiveIntegerField(default=0, verbose_name="Total de Puntos")
     image_perfil = models.ImageField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Imagen de Perfil")
+    image_perfil2 = models.ImageField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Imagen de Perfil 2")
+    image_perfil3 = models.ImageField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Imagen de Perfil 3")
    
     def __str__(self):
         return f"{self.username} - Puntos: {self.total_points}"
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Si se ha subido una imagen de perfil, recortar
-        if self.image_perfil:
-            try:
-                print("Recortando imagen...", self.image_perfil.name)
-                path_image = "media/" + self.image_perfil.name
-                recortar_foto(path_image, self.id)
-            except Exception as e:
-                print("Error al recortar la imagen:", e)
+        
+        image_fields = ["image_perfil", "image_perfil2", "image_perfil3"]
+
+        for field_name in image_fields:
+            image_field = getattr(self, field_name, None)
+            if image_field:  # Si la imagen existe
+                try:
+                    print(f"Recortando imagen... {image_field.name}")
+                    path_image = f"media/{image_field.name}"
+                    recortar_foto(path_image, self.id)
+                except Exception as e:
+                    print(f"Error al recortar la imagen {field_name}: {e}")
 
 # Modelo para representar los contenedores de basura
 class WasteContainer(models.Model):
