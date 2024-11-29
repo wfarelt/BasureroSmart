@@ -5,13 +5,13 @@
 
 <table class="table">
   <tr>
-    <th>Reward</th>
-    <th>Description</th>
-    <th>Points Required</th>
+    <th>Recompensa</th>
+    <th>Descripción</th>
+    <th>Puntos requeridos</th>
     <th>Stock</th>
-    <th>Image</th>
-    <th>Status</th>
-    <th>Options</th>
+    <th>Imagen</th>
+    <th>Estado</th>
+    <th>Opción</th>
   </tr>
   {% for reward in rewards %}
   <tr>
@@ -20,14 +20,14 @@
     <td>{{ reward.points_required }}</td>
     <td>{{ reward.stock }}</td>
     <td><img src="{{ reward.image.url }}" width="50" height="50" /></td>
-    <td>{{ reward.status }}</td>
+    <td>{{ reward.status|yesno:"Habilitado,Deshabilitado" }}</td>
     <td>
-      <a href="{% url 'update_reward' reward.id %}" class="btn btn-primary btn-sm">Edit</a>
+      <a href="{% url 'update_reward' reward.id %}" class="btn btn-primary btn-sm">Editar</a>
       
       {% if reward.status %}
-      <a href="{% url 'disable_reward' reward.id %}" class="btn btn-danger btn-sm">Disable</a>  
+      <a href="{% url 'disable_reward' reward.id %}" class="btn btn-danger btn-sm">Deshabilitado</a>  
       {% else %}
-      <a href="{% url 'enable_reward' reward.id %}" class="btn btn-success btn-sm">Enable</a>
+      <a href="{% url 'enable_reward' reward.id %}" class="btn btn-success btn-sm">Habilitado</a>
       {% endif %}
 
     </td>
@@ -36,5 +36,5 @@
 </table>
 
 <br />
-<a href="{% url 'create_reward' %}" class="btn btn-dark">Create Reward</a>
+<a href="{% url 'create_reward' %}" class="btn btn-dark">Crear recompensa</a>
 {% endblock %}
