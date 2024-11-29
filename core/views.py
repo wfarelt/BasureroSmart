@@ -79,8 +79,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
             transaction = serializer.save()
 
             # Actualizar puntos del usuario
-            transaction.user.total_points += transaction.points_awarded
-            transaction.user.save()
+            #transaction.user.total_points += transaction.points_awarded
+            #transaction.user.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

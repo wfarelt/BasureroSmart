@@ -145,13 +145,12 @@ class UserListView(LoginRequiredMixin, ListView):
     context_object_name = 'users'
     login_url = 'login'
     
-    # añadir titulo
+    # añadir titulo y enviar transacciones por usuario
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Usuarios'
-        context['transactions'] = Transaction.objects.filter(user=self.request.user).count()
-        context['claims'] = RewardClaim.objects.filter(user=self.request.user).count()
         return context
+    
     
 def train_model_view(request):
     tfr.entrenamiento()

@@ -17,9 +17,9 @@
     <td>{{ user.id }}</td>
     <td>{{ user.username }}</td>
     <td>{{ user.email }}</td>
-    <td class="text-center">{{ transactions }}</td>
+    <td class="text-center">{{ user.total_transactions }}</td>
     <td class="text-center">{{ user.total_points }}</td>
-    <td class="text-center">{{ claims }}</td>
+    <td class="text-center">{{ user.total_claims }}</td>
   </tr>
   {% endfor %}
 </table>

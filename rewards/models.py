@@ -17,7 +17,7 @@ class Reward(models.Model):
 
 # Modelo para registrar canje de recompensas
 class RewardClaim(models.Model):    
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='claims')
     reward = models.ForeignKey(Reward, on_delete=models.CASCADE)
     claim_date = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=12, unique=True, default=get_random_string(12))

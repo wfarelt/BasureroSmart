@@ -21,7 +21,11 @@ def recortar_foto(path_image, id_user):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Detectar caras en la imagen
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    try:
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    except Exception as e:
+        print(f"Error al detectar caras en la imagen: {e}")
+        return
 
     # Si se detecta al menos una cara
     if len(faces) > 0:
@@ -33,9 +37,10 @@ def recortar_foto(path_image, id_user):
             cv2.imwrite(path_image, face_img)
             print(f"Foto registrada exitosamente: {path_image}")
             break  # Solo guardamos la primera cara detectada
+        return True
     else:
         print("No se detectó ninguna cara en la imagen.")
-
+        return False
 
 # Modelo extendido de usuario para añadir la bonificación total
 def user_directory_path(instance, filename):
@@ -67,9 +72,20 @@ class User(AbstractUser):
                 try:
                     print(f"Recortando imagen... {image_field.name}")
                     path_image = f"media/{image_field.name}"
-                    recortar_foto(path_image, self.id)
+                    if recortar_foto(path_image, self.id):
+                        print(f"Imagen recortada exitosamente: {image_field.name}")
+                    else:
+                        print(f"No se pudo recortar la imagen: {image_field.name}")
+                        # Eliminar imagen si no se pudo recortar
+                        os.remove(path_image)
                 except Exception as e:
                     print(f"Error al recortar la imagen {field_name}: {e}")
+    
+    def total_transactions(self):
+        return self.transactions.count()
+    
+    def total_claims(self):
+        return self.claims.count()
 
 # Modelo para representar los contenedores de basura
 class WasteContainer(models.Model):
